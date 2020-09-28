@@ -1,0 +1,7 @@
+{
+	"name": "actor-sitemap-to-request-queue",
+	"version": "0.0",
+	"buildTag": "latest",
+	"env": null,
+	"template": "project_empty"
+}

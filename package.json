@@ -1,0 +1,25 @@
+{
+	"name": "actor-sitemap-to-request-queue",
+	"version": "0.0.1",
+	"description": "Downloads sitemap XMLs and place them in a RequestQueue",
+	"dependencies": {
+		"apify": "^0.21.4"
+	},
+	"devDependencies": {
+		"@apify/eslint-config": "^0.1.1",
+		"@typescript-eslint/eslint-plugin": "^4.2.0",
+		"typescript": "^4.0.3",
+		"eslint": "^7.9.0"
+	},
+	"scripts": {
+		"start": "node src/main.js",
+		"lint": "./node_modules/.bin/eslint ./src --ext .js,.jsx",
+		"lint:fix": "./node_modules/.bin/eslint ./src --ext .js,.jsx --fix",
+		"test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
+	},
+	"author": {
+		"name": "Paulo Cesar",
+		"url": "https://github.com/pocesar"
+	},
+	"license": "Apache-2.0"
+}

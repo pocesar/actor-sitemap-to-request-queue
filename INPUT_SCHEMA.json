@@ -1,0 +1,40 @@
+{
+    "title": "Sitemap to RequestQueue",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Sitemap URLs",
+            "description": "sitemap.xml urls, needs to be a proper sitemap",
+            "type": "array",
+            "editor": "requestListSources"
+        },
+        "targetRQ": {
+            "title": "Target RequestQueue",
+            "description": "Provide the target ID for the RequestQueue",
+            "type": "string",
+            "editor": "textfield"
+        },
+        "proxyConfig": {
+            "title": "Proxy",
+            "description": "Proxy configuration",
+            "type": "object",
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["SHADER"]
+            },
+            "editor": "proxy"
+        },
+        "userData": {
+            "title": "User data provider",
+            "description": "If you need to provide any user data depending on the url",
+            "type": "string",
+            "default": "(request) => {\n\treturn request.userData; \n}",
+            "editor": "javascript"
+        }
+    },
+    "required": [
+        "startUrls",
+        "proxyConfig"
+    ]
+}
