@@ -27,6 +27,7 @@ Apify.main(async () => {
         handlePageTimeoutSecs: 3600,
         additionalMimeTypes: [
             'application/xml',
+            'text/xml',
         ],
         useSessionPool: true,
         proxyConfiguration,
