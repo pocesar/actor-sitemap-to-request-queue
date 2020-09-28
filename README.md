@@ -16,7 +16,7 @@ Apify.main(async () => {
     proxyConfig,
     // use this for this run's RequestQueue, but can be a named one, or if you
     // leave it empty, it will be placed on the remote run RQ
-    targetRQ: rq.queueId,
+    targetRQ: requestQueue.queueId,
     // required sitemaps
     startUrls: [{
       url: "http://example.com/sitemap1.xml",
