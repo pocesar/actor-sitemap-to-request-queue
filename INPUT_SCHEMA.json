@@ -25,11 +25,11 @@
             },
             "editor": "proxy"
         },
-        "userData": {
-            "title": "User data provider",
-            "description": "If you need to provide any user data depending on the url",
+        "transform": {
+            "title": "Transform request function",
+            "description": "If you need to provide any user data depending on the url. If you return null from this function, the url won't be added to the RequestQueue",
             "type": "string",
-            "default": "(request) => {\n\treturn request.userData; \n}",
+            "default": "(request) => {\n    return request;\n}",
             "editor": "javascript"
         }
     },

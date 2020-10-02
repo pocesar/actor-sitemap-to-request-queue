@@ -4,7 +4,7 @@ const { RateLimitedRQ } = require('./functions');
 const { log } = Apify.utils;
 
 Apify.main(async () => {
-    const { startUrls, targetRQ, proxyConfig, userData } = await Apify.getInput();
+    const { startUrls, targetRQ, proxyConfig, transform } = await Apify.getInput();
 
     const rq = await Apify.openRequestQueue(targetRQ, targetRQ ? { forceCloud: true } : undefined);
     const requestList = await Apify.openRequestList('STARTURLS', startUrls);
@@ -15,11 +15,12 @@ Apify.main(async () => {
 
     log.info(`Will parse ${requestList.length()} sitemaps`);
 
-    const evaled = userData && typeof userData === 'string'
-        ? eval(`() => { return (${userData}) }`)()
-        : (request) => request.userData;
+    const evaled = transform && typeof transform === 'string'
+        ? eval(`() => { return (${transform}) }`)()
+        : (request) => request;
 
     const rateLimited = RateLimitedRQ(rq);
+    let total = 0;
 
     const sitemapCrawler = new Apify.CheerioCrawler({
         requestList,
@@ -43,19 +44,23 @@ Apify.main(async () => {
             let unique = 0;
 
             for (const url of urls) {
-                const r = await rateLimited.addRequest({
-                    url,
-                    userData: evaled(request),
-                });
+                const req = evaled(new Apify.Request({ url, userData: { ...request.userData } }));
 
-                if (!r.wasAlreadyPresent) {
-                    unique++;
+                if (req && req instanceof Apify.Request) {
+                    const r = await rateLimited.addRequest(req);
+
+                    if (!r.wasAlreadyPresent) {
+                        unique++;
+                        total++;
+                    }
                 }
             }
 
-            log.info(`Added ${unique} urls`);
+            log.info(`Added ${unique} urls from ${request.url}`);
         },
     });
 
     await sitemapCrawler.run();
+
+    log.info(`Added ${total} total urls`);
 });

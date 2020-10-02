@@ -10,9 +10,10 @@ Apify.main(async () => {
   const { proxyConfig } = await Apify.getInput();
   const requestQueue = await Apify.openRequestQueue();
 
-  const run = (await Apify.setValue('SITEMAP-CALL', run)) || { runId: '', actorId: '' };
+  // this is needed so it doesn't execute everytime there's a migration
+  const run = (await Apify.getValue('SITEMAP-CALL', run)) || { runId: '', actorId: '' };
 
-  if (!run.runId) {
+  if (!run || !run.runId) {
     // this might take a while!
     const runCall = await Apify.call('pocesar/sitemap-to-request-queue', {
       // required proxy configuration, like { useApifyProxy: true, apifyProxyGroups: ['SHADER'] }
@@ -29,11 +30,15 @@ Apify.main(async () => {
       }, {
         url: "http://example.com/sitemap2.xml",
       }],
-      // Provide your own userData callback
-      userData: ((request) => {
-        return {
-          label: request.url.includes('/item/') ? 'DETAILS' : 'CATEGORY'
+      // Provide your own transform callback to filter or alter the request before adding it to the queue
+      transform: ((request) => {
+        if (!request.url.includes('detail')) {
+          return null;
         }
+
+        request.userData.label = request.url.includes('/item/') ? 'DETAILS' : 'CATEGORY';
+
+        return request;
       }).toString()
     }, { waitSecs: 0 });
 
